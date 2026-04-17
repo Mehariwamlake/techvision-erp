@@ -42,7 +42,7 @@ services:
     volumes:
       - sites:/home/frappe/frappe-bench/sites
     ports:
-    - "8082:8082"
+    - "8082:8080"
 
     networks:
       - bench-network
