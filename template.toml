@@ -22,6 +22,6 @@ env = [
 mounts = []
 
 [[config.domains]]
-serviceName = "frontenderp"
+serviceName = "frontend"
 port = 8_082
 host = "${main_domain}"
