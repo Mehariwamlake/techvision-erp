@@ -1,0 +1,131 @@
+version: "3.8"
+
+name: techvision-frappe
+
+x-customizable-image: &customizable_image
+  image: ${CUSTOM_IMAGE:-ghcr.io/mehariwamlake/mail}:${CUSTOM_TAG:-faeabcf22df970a50cec415ce72e325cee4523bb}
+  pull_policy: ${PULL_POLICY:-always}
+  restart: ${RESTART_POLICY:-unless-stopped}
+
+
+
+x-backend-defaults: &backend_defaults
+  <<: *customizable_image
+  volumes:
+    - sites:/home/frappe/frappe-bench/sites
+
+services:
+
+  mariadb:
+    image: mariadb:10.8
+    restart: unless-stopped
+    networks:
+    - techvision-net
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --skip-log-bin
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root}
+    volumes:
+      - mariadb-data:/var/lib/mysql
+
+  redis-cache:
+    image: redis:7-alpine
+    restart: unless-stopped
+    networks:
+    - techvision-net
+    volumes:
+      - redis-cache-data:/data
+
+  redis-queue:
+    image: redis:7-alpine
+    restart: unless-stopped
+    networks:
+    - techvision-net
+    volumes:
+      - redis-queue-data:/data
+
+
+
+  # -------------------------
+  # 🔥 AUTO SITE CREATION SERVICE
+  # -------------------------
+
+
+  backend:
+    <<: *backend_defaults
+    platform: linux/amd64
+    networks:
+    - techvision-net
+    depends_on:
+      mariadb:
+        condition: service_started
+      redis-cache:
+        condition: service_started
+      redis-queue:
+        condition: service_started
+
+  websocket:
+    <<: *backend_defaults
+    platform: linux/amd64
+    command: >
+      node /home/frappe/frappe-bench/apps/frappe/socketio.js
+    networks:
+    - techvision-net
+    environment:
+      REDIS_URL: redis://redis-queue:6379
+    depends_on:
+      mariadb:
+        condition: service_started
+      redis-cache:
+        condition: service_started
+      redis-queue:
+        condition: service_started
+
+  frontend:
+    <<: *customizable_image
+    platform: linux/amd64
+    command: ["nginx-entrypoint.sh"]
+    networks:
+    - techvision-net
+    ports:
+    - "8080:8080"
+    environment:
+      BACKEND: backend:8000
+      SOCKETIO: websocket:9000
+      FRAPPE_SITE_NAME_HEADER: mail.techvision.edu.et
+      UPSTREAM_REAL_IP_ADDRESS: 0.0.0.0
+    volumes:
+      - sites:/home/frappe/frappe-bench/sites
+    depends_on:
+      - backend
+      - websocket
+
+  queue-short:
+    <<: *backend_defaults
+    command: bench worker --queue short,default
+    networks:
+    - techvision-net
+
+  queue-long:
+    <<: *backend_defaults
+    command: bench worker --queue long,default,short
+    networks:
+    - techvision-net
+
+  scheduler:
+    <<: *backend_defaults
+    command: bench schedule
+    networks:
+    - techvision-net
+
+volumes:
+  sites:
+  mariadb-data:
+  redis-cache-data:
+  redis-queue-data:
+
+networks:
+  techvision-net:
+    driver: bridge
