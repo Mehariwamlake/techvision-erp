@@ -7,5 +7,9 @@
   {
     "url": "https://github.com/frappe/hrms",
     "branch": "version-15"
+  },
+  {
+    "url": "https://github.com/Mehariwamlake/chapa_integration",
+    "branch": "1.0.1"
   }
 ]
