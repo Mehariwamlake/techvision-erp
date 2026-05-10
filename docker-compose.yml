@@ -46,6 +46,16 @@ services:
 
     networks:
       - bench-network
+    labels:
+      - "traefik.enable=true"
+
+      - "traefik.http.routers.frappe.rule=HostRegexp(`{host:.+}`)"
+
+      - "traefik.http.routers.frappe.entrypoints=websecure"
+
+      - "traefik.http.routers.frappe.tls.certresolver=myresolver"
+
+      - "traefik.http.services.frappe.loadbalancer.server.port=8080"
 
     healthcheck:
       test:
@@ -56,6 +66,28 @@ services:
       timeout: 30s
       retries: 30
 
+  traefik:
+    image: traefik:v3
+
+    command:
+      - "--providers.docker=true"
+
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+
+      - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
+
+      - "--certificatesresolvers.myresolver.acme.email=mehariwamlake@gmail.com"
+
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+
+    ports:
+      - "80:80"
+      - "443:443"
+
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - traefik-certificates:/letsencrypt
   queue-default:
     <<: *custom_image
     command:
