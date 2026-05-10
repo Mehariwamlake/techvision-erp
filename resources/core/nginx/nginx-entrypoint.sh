@@ -25,7 +25,7 @@ if [[ -z "$FRAPPE_SITE_NAME_HEADER" ]]; then
   # shellcheck disable=SC2016
   echo 'FRAPPE_SITE_NAME_HEADER defaulting to $host'
   # shellcheck disable=SC2016
-  export FRAPPE_SITE_NAME_HEADER='$host'
+  export FRAPPE_SITE_NAME_HEADER=$host
 fi
 
 if [[ -z "$PROXY_READ_TIMEOUT" ]]; then
