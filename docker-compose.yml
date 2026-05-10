@@ -72,8 +72,7 @@ services:
   frontend:
     image: ghcr.io/mehariwamlake/techvision-erp:1.0.1
     restart: always
-    depends_on:
-      - websocket
+  
     networks:
       - frappe_network
     command: ["nginx-entrypoint.sh"]
