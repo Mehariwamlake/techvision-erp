@@ -378,6 +378,7 @@ volumes:
   redis-cache-data:
   redis-queue-data:
   redis-socketio-data:
+  traefik-certificates:
   sites:
     driver: local
 
