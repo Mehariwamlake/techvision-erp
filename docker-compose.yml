@@ -41,8 +41,7 @@ services:
       UPSTREAM_REAL_IP_RECURSIVE: "off"
     volumes:
       - sites:/home/frappe/frappe-bench/sites
-    ports:
-    - "8080:8080"
+    ports: ${PORTS:-"8085:8085"}
 
     networks:
       - bench-network
