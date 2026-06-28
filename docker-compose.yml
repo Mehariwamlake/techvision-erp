@@ -1,5 +1,5 @@
 x-custom-image: &custom_image
-  image: ghcr.io/mehariwamlake/techvision-erp:1.0.2
+  image: ghcr.io/mehariwamlake/techvision-erp:1.0.3
   pull_policy: ${PULL_POLICY:-always}
   deploy:
     restart_policy:
