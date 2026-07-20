@@ -31,5 +31,9 @@
   {
     "url": "https://github.com/frappe/helpdesk",
     "branch": "main"
+  },
+  {
+    "url": "https://github.com/frappe/flow",
+    "branch": "develop"
   }
 ]
