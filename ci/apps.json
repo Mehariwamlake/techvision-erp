@@ -23,6 +23,9 @@
   {
     "url": "https://github.com/Mehariwamlake/Zkteco-Checkins-Sync",
     "branch": "main"
+  },
+  {
+    "url": "https://github.com/frappe/Letters",
+    "branch": "main"
   }
-  
 ]
