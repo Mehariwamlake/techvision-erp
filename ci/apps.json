@@ -21,18 +21,6 @@
     "branch": "main"
   },
   {
-    "url": "https://github.com/Mehariwamlake/Zkteco-Checkins-Sync",
-    "branch": "main"
-  },
-  {
-    "url": "https://github.com/frappe/telephony",
-    "branch": "develop"
-  },
-  {
-    "url": "https://github.com/frappe/helpdesk",
-    "branch": "main"
-  },
-  {
     "url": "https://github.com/frappe/flow",
     "branch": "develop"
   }
