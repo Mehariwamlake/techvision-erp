@@ -23,5 +23,13 @@
   {
     "url": "https://github.com/frappe/flow",
     "branch": "develop"
+  },
+    {
+    "url": "https://github.com/frappe/atlas",
+    "branch": "main"
+  },
+    {
+    "url": "https://github.com/frappe/central",
+    "branch": "main"
   }
 ]
